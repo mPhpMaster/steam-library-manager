@@ -15,9 +15,11 @@ $timer.Add_Tick({
         if ($form.Text -ne 'About Steam Library Manager') { continue }
         $labels = @($form.Controls | Where-Object { $_ -is [Windows.Forms.Label] } | ForEach-Object Text)
         $links = @($form.Controls | Where-Object { $_ -is [Windows.Forms.LinkLabel] } | ForEach-Object Text)
+        $buttons = @($form.Controls | Where-Object { $_ -is [Windows.Forms.Button] } | ForEach-Object Text)
         if ($form.MaximizeBox -or $form.MinimizeBox -or
             "Version $script:AppVersion" -notin $labels -or
-            'Copyright © 2026 mPhpMaster' -notin $labels -or $links.Count -ne 2) {
+            'Copyright © 2026 mPhpMaster' -notin $labels -or $links.Count -ne 2 -or
+            'Add to Start Menu' -notin $buttons) {
             throw 'About dialog content or window controls are incorrect.'
         }
         $script:seen = $true

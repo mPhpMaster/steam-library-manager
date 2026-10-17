@@ -1,1 +1,1 @@
-$script:AppVersion = '0.2.1'
+$script:AppVersion = '0.3.0'

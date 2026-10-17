@@ -18,6 +18,7 @@ Add-Type -AssemblyName Microsoft.VisualBasic
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.CloneStatus.ps1')
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.CardInteraction.ps1')
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.Version.ps1')
+. (Join-Path $PSScriptRoot 'SteamLibraryManager.StartMenu.ps1')
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.About.ps1')
 [Windows.Forms.Application]::EnableVisualStyles()
 

@@ -1,7 +1,7 @@
 function Show-About {
     $dialog = New-Object Windows.Forms.Form
     $dialog.Text = 'About Steam Library Manager'
-    $dialog.ClientSize = New-Object Drawing.Size(510, 320)
+    $dialog.ClientSize = New-Object Drawing.Size(510, 365)
     $dialog.StartPosition = 'CenterParent'; $dialog.FormBorderStyle = 'None'
     $dialog.BackColor = $script:Theme.Background; $dialog.ForeColor = $script:Theme.Text
     Add-TitleBar $dialog 'About' | Out-Null
@@ -23,6 +23,10 @@ function Show-About {
     $releases.ActiveLinkColor = $script:Theme.Text
     $releases.Add_LinkClicked({ Start-Process -FilePath $releasesUrl }.GetNewClosure())
     $dialog.Controls.Add($releases)
-    [void](New-Button 'Close' 386 270 100 $dialog 'normal' { $dialog.Close() })
+    [void](New-Button 'Add to Start Menu' 24 300 220 $dialog 'normal' {
+        $shortcutPath = Add-StartMenuShortcut
+        [Windows.Forms.MessageBox]::Show($dialog, "Shortcut added to Start Menu > All apps.`n$shortcutPath", 'Steam Library Manager', 'OK', 'Information') | Out-Null
+    }.GetNewClosure())
+    [void](New-Button 'Close' 386 300 100 $dialog 'normal' { $dialog.Close() })
     try { [void]$dialog.ShowDialog($script:Form) } finally { $dialog.Dispose() }
 }
