@@ -19,7 +19,7 @@ $timer.Add_Tick({
         if ($form.MaximizeBox -or $form.MinimizeBox -or
             "Version $script:AppVersion" -notin $labels -or
             'Copyright © 2026 mPhpMaster' -notin $labels -or $links.Count -ne 2 -or
-            'Add to Start Menu' -notin $buttons) {
+            'Add to Start Menu' -notin $buttons -or 'Open App Folder' -notin $buttons) {
             throw 'About dialog content or window controls are incorrect.'
         }
         $script:seen = $true

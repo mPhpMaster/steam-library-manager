@@ -23,10 +23,11 @@ function Show-About {
     $releases.ActiveLinkColor = $script:Theme.Text
     $releases.Add_LinkClicked({ Start-Process -FilePath $releasesUrl }.GetNewClosure())
     $dialog.Controls.Add($releases)
-    [void](New-Button 'Add to Start Menu' 24 300 220 $dialog 'normal' {
+    [void](New-Button 'Add to Start Menu' 24 300 200 $dialog 'normal' {
         $shortcutPath = Add-StartMenuShortcut
         [Windows.Forms.MessageBox]::Show($dialog, "Shortcut added to Start Menu > All apps.`n$shortcutPath", 'Steam Library Manager', 'OK', 'Information') | Out-Null
     }.GetNewClosure())
+    [void](New-Button 'Open App Folder' 234 300 140 $dialog 'normal' { Open-AppFolder })
     [void](New-Button 'Close' 386 300 100 $dialog 'normal' { $dialog.Close() })
     try { [void]$dialog.ShowDialog($script:Form) } finally { $dialog.Dispose() }
 }
