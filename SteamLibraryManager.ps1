@@ -19,7 +19,7 @@ Add-Type -AssemblyName Microsoft.VisualBasic
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.CardInteraction.ps1')
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.Version.ps1')
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.StartMenu.ps1')
-. (Join-Path $PSScriptRoot 'SteamLibraryManager.AppFolder.ps1')
+. (Join-Path $PSScriptRoot 'SteamLibraryManager.FolderExplorer.ps1')
 . (Join-Path $PSScriptRoot 'SteamLibraryManager.About.ps1')
 [Windows.Forms.Application]::EnableVisualStyles()
 
@@ -100,7 +100,7 @@ function Update-Buttons {
     foreach ($button in @($renameGame, $removeGame)) { $button.Enabled = $hasGame }
     $play.Enabled = $hasGame -and -not $issue
     $clone.Enabled = $hasVersion -and -not $issue
-    foreach ($button in @($renameVersion, $removeVersion)) { $button.Enabled = $hasVersion }
+    foreach ($button in @($openVersionFolder, $renameVersion, $removeVersion)) { $button.Enabled = $hasVersion }
     $running = Test-SteamRunning
     $closeSteam.Enabled = $running; $startSteam.Enabled = -not $running
     $steamStatus.Text = if ($running) { 'Steam is running' } else { 'Steam is closed' }
@@ -284,7 +284,7 @@ $removeGame = New-Button 'Remove Game' 128 636 106 $side 'danger' {
         $script:SelectedGameId = $null; Refresh-Games
     }
 }
-$clone = New-Button 'Clone' 443 116 120 $main 'normal' {
+$clone = New-Button 'Clone' 292 116 130 $main 'normal' {
     $game = Selected-Game; $source = Selected-Version
     Assert-ManagedGameIdentity $game
     $choice = Select-ClonePlan $game $source
@@ -297,11 +297,14 @@ $clone = New-Button 'Clone' 443 116 120 $main 'normal' {
         Write-Activity 'Clone cancelled; partial files removed.' 'warn'
     } else { throw $result.Message }
 }
-$renameVersion = New-Button 'Rename' 571 116 118 $main 'normal' {
+$openVersionFolder = New-Button 'Open Folder' 430 116 140 $main 'normal' {
+    Open-VersionFolder (Selected-Version).Path
+}
+$renameVersion = New-Button 'Rename' 578 116 120 $main 'normal' {
     $version = Selected-Version; $name = Ask-Name 'New version name:' $version.Name
     if ($name) { $version.Name = $name; Save-GameData $script:Data; Write-Activity "Renamed version to $name." 'ok'; Refresh-Versions }
 }
-$removeVersion = New-Button 'Delete Entry' 697 116 149 $main 'danger' {
+$removeVersion = New-Button 'Delete Entry' 706 116 140 $main 'danger' {
     $game = Selected-Game; $version = Selected-Version
     if (Confirm "Remove $($version.Name) from this tool?`nIts files remain untouched.") {
         $game.Versions = @($game.Versions | Where-Object { $_.Id -ne $version.Id })
@@ -344,9 +347,9 @@ function Resize-Layout {
     $gameInfo.Left = $contentWidth - 335
     $gameTitle.Width = $contentWidth - 300
     $small = $contentWidth -lt 730
-    $toolbarWidths = if ($small) { @(120, 115, 135) } else { @(155, 145, 160) }
-    $toolbar = @($clone, $renameVersion, $removeVersion)
-    $toolbarWidth = ($toolbarWidths | Measure-Object -Sum).Sum + 16
+    $toolbarWidths = if ($small) { @(95, 110, 95, 120) } else { @(130, 140, 120, 140) }
+    $toolbar = @($clone, $openVersionFolder, $renameVersion, $removeVersion)
+    $toolbarWidth = ($toolbarWidths | Measure-Object -Sum).Sum + 24
     $position = $contentWidth - 24 - $toolbarWidth
     $versionHeading.Width = [Math]::Max(135, ($position - 34))
     for ($i = 0; $i -lt $toolbar.Count; $i++) {
