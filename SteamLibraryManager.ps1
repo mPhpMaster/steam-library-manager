@@ -251,7 +251,7 @@ function Refresh-Games([string]$preferred = '') {
         elseif ($script:SelectedGameId -and @($ordered | Where-Object { $_.AppId -eq $script:SelectedGameId }).Count) { $script:SelectedGameId }
         elseif ($ordered.Count) { $ordered[0].AppId } else { '' }
     if ($target) { Select-Game $target }
-    else { $script:SelectedGameId = $null; $script:SelectedVersionId = $null; $cards.Controls.Clear(); $gameTitle.Text = 'STEAM GAME CLONER'; $gameInfo.Text = ''; $versionHeading.Text = 'VERSIONS · 0'; Update-Buttons }
+    else { $script:SelectedGameId = $null; $script:SelectedVersionId = $null; $cards.Controls.Clear(); $gameTitle.Text = 'STEAM LIBRARY MANAGER'; $gameInfo.Text = ''; $versionHeading.Text = 'VERSIONS · 0'; Update-Buttons }
 }
 
 $about = New-Button 'About' 16 542 218 $side 'normal' { Show-About }
